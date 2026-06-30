@@ -37,3 +37,7 @@ transcript_full.jsonl
 walkthrough.md
 implementation_plan.md
 task.md
+
+.dev.vars*
+!.dev.vars.example
+!.env.example
