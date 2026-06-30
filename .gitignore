@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production / Builds
+dist/
+build/
+.cloudflare
+
+# Cloudflare Wrangler
+.wrangler/
+
+# IDE / System
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment / Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+
+# Gemini / Antigravity Agent logs
+.gemini/
+.agents/
+transcript.jsonl
+transcript_full.jsonl
+walkthrough.md
+implementation_plan.md
+task.md

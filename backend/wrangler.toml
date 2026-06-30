@@ -1,0 +1,19 @@
+name = "pastely-backend"
+main = "src/index.ts"
+compatibility_date = "2024-12-05"
+
+[vars]
+# Custom environment variables (e.g. rate limit configs)
+MAX_PASTE_SIZE_BYTES = 102400 # 100 KB
+
+# D1 Database Binding
+# Execute 'wrangler d1 create pastely-db' and replace database_id
+[[d1_databases]]
+binding = "DB"
+database_name = "pastely-db"
+database_id = "PASTELY_D1_DATABASE_ID_PLACEHOLDER"
+
+# Scheduled Cron Trigger
+# Executes every hour to purge expired pastes
+[triggers]
+crons = ["0 * * * *"]
