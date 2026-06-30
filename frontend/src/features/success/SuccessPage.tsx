@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useParams, useLocation, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Copy, Check, QrCode, ExternalLink, RefreshCw, X, Heart, Share2 } from 'lucide-react';
+import { Copy, Check, QrCode, ExternalLink, RefreshCw, X, Heart, Share2, Link } from 'lucide-react';
 
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -24,9 +23,11 @@ const DISMISS_BUTTON_TEXTS = [
   'Sure, but no', 'Gotcha', 'Thanks anyway', 'Bye bye', 'Understood, close'
 ];
 
-export const SuccessPage: React.FC = () => {
-  const { code = '' } = useParams<{ code: string }>();
-  const location = useLocation();
+interface SuccessPageProps {
+  code: string;
+}
+
+export const SuccessPage: React.FC<SuccessPageProps> = ({ code }) => {
   const [key, setKey] = useState<string>('');
   
   const [showQrModal, setShowQrModal] = useState(false);
@@ -37,23 +38,18 @@ export const SuccessPage: React.FC = () => {
   const { copied: codeCopied, copy: copyCode } = useClipboard();
   const { copied: linkCopied, copy: copyLink } = useClipboard();
 
-  // Extract key fragment (#k=...)
+  // Extract key fragment (#k=...) natively from window location
   useEffect(() => {
-    const hash = location.hash;
-    if (hash) {
-      const params = new URLSearchParams(hash.slice(1));
-      const keyVal = params.get('k');
-      if (keyVal) setKey(keyVal);
+    const hash = window.location.hash;
+    const kIndex = hash.indexOf('k=');
+    if (kIndex !== -1) {
+      // Key is everything after 'k='
+      const keyVal = hash.substring(kIndex + 2);
+      setKey(keyVal);
     }
-  }, [location]);
+  }, [window.location.hash]);
 
-  // Select a random dismiss button text on mount
-  useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * DISMISS_BUTTON_TEXTS.length);
-    setDismissText(DISMISS_BUTTON_TEXTS[randomIndex]);
-  }, []);
-
-  const shareUrl = `${window.location.origin}/view/${code}#k=${key}`;
+  const shareUrl = `${window.location.origin}/#/view/${code}#k=${key}`;
 
   // Generate QR code url
   const handleGenerateQr = async () => {
@@ -82,6 +78,12 @@ export const SuccessPage: React.FC = () => {
       copyLink(shareUrl);
     }
   };
+
+  // Select a random dismiss button text on mount
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * DISMISS_BUTTON_TEXTS.length);
+    setDismissText(DISMISS_BUTTON_TEXTS[randomIndex]);
+  }, []);
 
   return (
     <PageWrapper className="max-w-2xl" animate>
@@ -186,7 +188,7 @@ export const SuccessPage: React.FC = () => {
             </Button>
           </a>
 
-          <Link to="/create" className="w-full">
+          <a href="#/create" className="w-full">
             <Button
               variant="primary"
               className="w-full shadow-glow-sm"
@@ -194,7 +196,7 @@ export const SuccessPage: React.FC = () => {
             >
               Create Another
             </Button>
-          </Link>
+          </a>
         </motion.div>
       </motion.div>
 
@@ -304,3 +306,4 @@ export const SuccessPage: React.FC = () => {
     </PageWrapper>
   );
 };
+export default SuccessPage;

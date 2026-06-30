@@ -1,13 +1,10 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { HelpCircle } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { PageWrapper } from '../../components/layout/PageWrapper';
 
 export const NotFoundPage: React.FC = () => {
-  const navigate = useNavigate();
-
   return (
     <PageWrapper className="max-w-md text-center" animate>
       <Card className="flex flex-col items-center gap-6 p-8 border border-surface-300">
@@ -23,10 +20,10 @@ export const NotFoundPage: React.FC = () => {
         </div>
 
         <div className="flex flex-col gap-2 w-full">
-          <Button variant="primary" className="w-full" onClick={() => navigate('/')}>
+          <Button variant="primary" className="w-full" onClick={() => { window.location.hash = '#/'; }}>
             Back to Home
           </Button>
-          <Button variant="ghost" className="w-full" onClick={() => navigate(-1)}>
+          <Button variant="ghost" className="w-full" onClick={() => { window.history.back(); }}>
             Go Back
           </Button>
         </div>
@@ -34,3 +31,4 @@ export const NotFoundPage: React.FC = () => {
     </PageWrapper>
   );
 };
+export default NotFoundPage;

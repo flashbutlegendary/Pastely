@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { KeyRound, ArrowRight, AlertCircle } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -7,7 +6,6 @@ import { PageWrapper } from '../../components/layout/PageWrapper';
 import { validateCustomCode } from '../../lib/codegen';
 
 export const JoinPage: React.FC = () => {
-  const navigate = useNavigate();
   const [inputValue, setInputValue] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -21,22 +19,14 @@ export const JoinPage: React.FC = () => {
       return;
     }
 
-    // 1. Check if user pasted a full Pastely URL
-    try {
-      if (input.includes('/view/')) {
-        const url = new URL(input);
-        const pathParts = url.pathname.split('/');
-        const codeIndex = pathParts.indexOf('view') + 1;
-        const code = pathParts[codeIndex];
-        const hash = url.hash; // contains #k=...
-
-        if (code) {
-          navigate(`/view/${code}${hash}`);
-          return;
-        }
+    // 1. Check if user pasted a full Pastely URL (e.g. pastely.app/#/view/N7KP#k=xyz)
+    if (input.includes('/view/')) {
+      const parts = input.split('/view/');
+      const codeAndHash = parts[1]; // contains "N7KP#k=xyz"
+      if (codeAndHash) {
+        window.location.hash = `#/view/${codeAndHash}`;
+        return;
       }
-    } catch (err) {
-      // Not a valid URL, fallback to parsing as code
     }
 
     // 2. Validate custom code format
@@ -48,7 +38,7 @@ export const JoinPage: React.FC = () => {
     }
 
     // 3. Navigate to ViewPage (if no key is provided, ViewPage will ask for it)
-    navigate(`/view/${cleanCode}`);
+    window.location.hash = `#/view/${cleanCode}`;
   };
 
   return (
@@ -106,3 +96,4 @@ export const JoinPage: React.FC = () => {
     </PageWrapper>
   );
 };
+export default JoinPage;

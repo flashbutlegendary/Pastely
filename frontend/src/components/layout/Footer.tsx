@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 
 export const Footer: React.FC = () => {
@@ -27,13 +26,13 @@ export const Footer: React.FC = () => {
 
           {/* Nav Links */}
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-semibold text-secondary">
-            <Link to="/features" className="hover:text-primary transition-colors">Features</Link>
-            <Link to="/security" className="hover:text-primary transition-colors">Security</Link>
-            <Link to="/faq" className="hover:text-primary transition-colors">FAQ</Link>
-            <Link to="/feedback" className="hover:text-primary transition-colors">Feedback</Link>
-            <Link to="/support" className="hover:text-primary transition-colors flex items-center gap-1 text-amber-500">
+            <a href="#/features" className="hover:text-primary transition-colors">Features</a>
+            <a href="#/security" className="hover:text-primary transition-colors">Security</a>
+            <a href="#/faq" className="hover:text-primary transition-colors">FAQ</a>
+            <a href="#/feedback" className="hover:text-primary transition-colors">Feedback</a>
+            <a href="#/support" className="hover:text-primary transition-colors flex items-center gap-1 text-amber-500">
               <Heart className="w-3 h-3 fill-current" /> Support
-            </Link>
+            </a>
           </div>
 
           {/* Copy info */}
@@ -46,3 +45,4 @@ export const Footer: React.FC = () => {
     </footer>
   );
 };
+export default Footer;

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Zap, Shield, Trash2, ArrowRight, Activity, Clock, Cpu } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
@@ -54,9 +53,9 @@ export const LandingPage: React.FC = () => {
           No accounts. No setup. No friction. Encrypted client-side.
         </motion.p>
 
-        {/* CTA Buttons */}
+        {/* CTA CTA */}
         <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-16">
-          <Link to="/create" className="w-full sm:w-auto">
+          <a href="#/create" className="w-full sm:w-auto">
             <Button
               variant="primary"
               size="lg"
@@ -65,8 +64,8 @@ export const LandingPage: React.FC = () => {
             >
               Create Code
             </Button>
-          </Link>
-          <Link to="/join" className="w-full sm:w-auto">
+          </a>
+          <a href="#/join" className="w-full sm:w-auto">
             <Button
               variant="secondary"
               size="lg"
@@ -74,7 +73,7 @@ export const LandingPage: React.FC = () => {
             >
               Enter Code
             </Button>
-          </Link>
+          </a>
         </motion.div>
       </motion.div>
 
@@ -166,3 +165,4 @@ export const LandingPage: React.FC = () => {
     </PageWrapper>
   );
 };
+export default LandingPage;

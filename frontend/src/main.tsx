@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from './hooks/useTheme';
-import { router } from './router';
+import { App } from './App';
 
 // Stylesheet
 import './styles/globals.css';
@@ -10,7 +9,7 @@ import './styles/globals.css';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ThemeProvider>
-      <RouterProvider router={router} />
+      <App />
     </ThemeProvider>
   </React.StrictMode>
 );

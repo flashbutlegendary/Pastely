@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -15,7 +14,6 @@ import { encryptContent } from '../../lib/crypto';
 import { api } from '../../lib/api';
 import { addHistoryEntry } from '../../lib/history';
 import { validateCustomCode } from '../../lib/codegen';
-import { ExpiryOption, MaxViewsOption } from '../../types/paste';
 
 // Max allowed character count
 const MAX_CHARACTERS = 100000;
@@ -38,7 +36,6 @@ const pasteSchema = z.object({
 type PasteFormValues = z.infer<typeof pasteSchema>;
 
 export const CreatePage: React.FC = () => {
-  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [globalError, setGlobalError] = useState<string | null>(null);
   
@@ -150,7 +147,7 @@ export const CreatePage: React.FC = () => {
       });
 
       // 3. Save to browser local history
-      const shareUrl = `${window.location.origin}/view/${response.code}#k=${keyBase64}`;
+      const shareUrl = `${window.location.origin}/#/view/${response.code}#k=${keyBase64}`;
       addHistoryEntry({
         code: response.code,
         title: values.title || null,
@@ -160,7 +157,7 @@ export const CreatePage: React.FC = () => {
       });
 
       // 4. Navigate to success page with key fragment
-      navigate(`/created/${response.code}#k=${keyBase64}`);
+      window.location.hash = `#/created/${response.code}#k=${keyBase64}`;
     } catch (err: any) {
       console.error('Failed to create paste', err);
       if (err.code === 'CODE_TAKEN') {
@@ -310,3 +307,4 @@ export const CreatePage: React.FC = () => {
     </PageWrapper>
   );
 };
+export default CreatePage;

@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { PlusCircle, KeyRound, ArrowRight } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
@@ -7,8 +6,6 @@ import { PageWrapper } from '../../components/layout/PageWrapper';
 import { containerVariants, itemVariants } from '../../components/animations/variants';
 
 export const HomePage: React.FC = () => {
-  const navigate = useNavigate();
-
   return (
     <PageWrapper className="flex flex-col items-center justify-center min-h-[70vh]">
       <motion.div
@@ -29,7 +26,7 @@ export const HomePage: React.FC = () => {
           {/* Create Code Card */}
           <Card
             isHoverable
-            onClick={() => navigate('/create')}
+            onClick={() => { window.location.hash = '#/create'; }}
             className="flex flex-col justify-between items-start min-h-[220px] group cursor-pointer border border-surface-300 hover:border-brand-500/30 transition-all p-8"
           >
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-500/10 border border-brand-500/20 text-brand-400 mb-6 group-hover:scale-105 transition-transform duration-200 shadow-inner-glow">
@@ -50,7 +47,7 @@ export const HomePage: React.FC = () => {
           {/* Enter Code Card */}
           <Card
             isHoverable
-            onClick={() => navigate('/join')}
+            onClick={() => { window.location.hash = '#/join'; }}
             className="flex flex-col justify-between items-start min-h-[220px] group cursor-pointer border border-surface-300 hover:border-brand-500/30 transition-all p-8"
           >
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-500/10 border border-brand-500/20 text-brand-400 mb-6 group-hover:scale-105 transition-transform duration-200 shadow-inner-glow">
@@ -72,3 +69,4 @@ export const HomePage: React.FC = () => {
     </PageWrapper>
   );
 };
+export default HomePage;

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Clock, Copy, Trash2, ShieldAlert, KeyRound, ExternalLink, Calendar, Check } from 'lucide-react';
+import { Clock, Copy, Trash2, Calendar, Check, ExternalLink } from 'lucide-react';
 
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -93,11 +92,11 @@ export const HistoryPage: React.FC = () => {
                 Pastes you create on this browser will be listed here, complete with keys and deletion controls.
               </p>
             </div>
-            <Link to="/create">
+            <a href="#/create">
               <Button variant="primary" className="font-semibold shadow-glow-sm">
                 Create First Paste
               </Button>
-            </Link>
+            </a>
           </Card>
         ) : (
           /* History table/list */
@@ -177,3 +176,4 @@ export const HistoryPage: React.FC = () => {
     </PageWrapper>
   );
 };
+export default HistoryPage;

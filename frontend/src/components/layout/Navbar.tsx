@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { Menu, X, Sun, Moon, Github, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../hooks/useTheme';
@@ -8,7 +7,15 @@ import { Button } from '../ui/Button';
 export const Navbar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
+  const [currentHash, setCurrentHash] = useState(() => window.location.hash || '#/');
+
+  useEffect(() => {
+    const handleHash = () => {
+      setCurrentHash(window.location.hash || '#/');
+    };
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
 
   const navLinks = [
     { name: 'Features', path: '/features' },
@@ -18,7 +25,12 @@ export const Navbar: React.FC = () => {
     { name: 'History', path: '/history' },
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => {
+    if (path === '/') {
+      return currentHash === '#/' || currentHash === '';
+    }
+    return currentHash.split('?')[0].split('#')[1]?.startsWith(path) || false;
+  };
 
   return (
     <nav className="sticky top-0 z-40 w-full border-b border-surface border-opacity-40 bg-surface/80 backdrop-blur-md transition-colors duration-200">
@@ -26,7 +38,7 @@ export const Navbar: React.FC = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Left: Logo */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center gap-2.5 group">
+            <a href="#/" className="flex items-center gap-2.5 group">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-500 text-white shadow-glow-sm transition-transform duration-200 group-hover:scale-105">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-5 h-5 fill-current">
                   <rect x="9" y="7" width="14" height="2.5" rx="1.25" opacity="0.9"/>
@@ -38,15 +50,15 @@ export const Navbar: React.FC = () => {
               <span className="text-lg font-bold tracking-tight text-primary">
                 Pastely
               </span>
-            </Link>
+            </a>
           </div>
 
           {/* Center: Links (Desktop) */}
           <div className="hidden md:flex items-center gap-1 bg-surface-200/50 border border-surface border-opacity-60 rounded-full px-1 py-0.5">
             {navLinks.map((link) => (
-              <Link
+              <a
                 key={link.path}
-                to={link.path}
+                href={`#${link.path}`}
                 className={`px-4 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 ${
                   isActive(link.path)
                     ? 'bg-surface-elevated text-primary shadow-inner-glow'
@@ -54,7 +66,7 @@ export const Navbar: React.FC = () => {
                 }`}
               >
                 {link.name}
-              </Link>
+              </a>
             ))}
           </div>
 
@@ -78,7 +90,7 @@ export const Navbar: React.FC = () => {
               {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
 
-            <Link to="/support">
+            <a href="#/support">
               <Button
                 variant="secondary"
                 size="sm"
@@ -87,7 +99,7 @@ export const Navbar: React.FC = () => {
               >
                 Support
               </Button>
-            </Link>
+            </a>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -123,9 +135,9 @@ export const Navbar: React.FC = () => {
           >
             <div className="space-y-1.5 px-4 pb-6 pt-4">
               {navLinks.map((link) => (
-                <Link
+                <a
                   key={link.path}
-                  to={link.path}
+                  href={`#${link.path}`}
                   onClick={() => setIsOpen(false)}
                   className={`block rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${
                     isActive(link.path)
@@ -134,7 +146,7 @@ export const Navbar: React.FC = () => {
                   }`}
                 >
                   {link.name}
-                </Link>
+                </a>
               ))}
 
               <div className="divider my-4" />
@@ -149,8 +161,8 @@ export const Navbar: React.FC = () => {
                   <Github className="w-4 h-4" /> GitHub
                 </a>
 
-                <Link
-                  to="/support"
+                <a
+                  href="#/support"
                   onClick={() => setIsOpen(false)}
                   className="w-full"
                 >
@@ -161,7 +173,7 @@ export const Navbar: React.FC = () => {
                   >
                     Support Creator
                   </Button>
-                </Link>
+                </a>
               </div>
             </div>
           </motion.div>
@@ -170,3 +182,4 @@ export const Navbar: React.FC = () => {
     </nav>
   );
 };
+export default Navbar;

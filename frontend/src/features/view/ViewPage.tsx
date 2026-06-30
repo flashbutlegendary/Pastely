@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { Clock, Eye, Copy, Download, CornerDownRight, AlertCircle, Lock, ShieldAlert, FileText, Check } from 'lucide-react';
+import { Clock, Eye, Copy, Download, AlertCircle, Lock, ShieldAlert, FileText, Check } from 'lucide-react';
 
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -8,15 +7,15 @@ import { Badge } from '../../components/ui/Badge';
 import { Spinner } from '../../components/ui/Spinner';
 import { PageWrapper } from '../../components/layout/PageWrapper';
 import { api } from '../../lib/api';
-import { decryptContent, extractKeyFromFragment } from '../../lib/crypto';
+import { decryptContent } from '../../lib/crypto';
 import { useClipboard } from '../../hooks/useClipboard';
 import { ViewPasteResponse, ApiError } from '../../types/paste';
 
-export const ViewPage: React.FC = () => {
-  const { code = '' } = useParams<{ code: string }>();
-  const location = useLocation();
-  const navigate = useNavigate();
+interface ViewPageProps {
+  code: string;
+}
 
+export const ViewPage: React.FC<ViewPageProps> = ({ code }) => {
   // Data fetching states
   const [paste, setPaste] = useState<ViewPasteResponse | null>(null);
   const [decryptedText, setDecryptedText] = useState<string>('');
@@ -44,9 +43,11 @@ export const ViewPage: React.FC = () => {
         if (!active) return;
         setPaste(record);
 
-        // Check if encryption key is in URL fragment
-        const urlKey = extractKeyFromFragment(location.hash);
-        if (urlKey) {
+        // Check if encryption key is in URL fragment natively
+        const hash = window.location.hash;
+        const kIndex = hash.indexOf('k=');
+        if (kIndex !== -1) {
+          const urlKey = hash.substring(kIndex + 2);
           try {
             const decrypted = await decryptContent(record.encryptedPayload, record.iv, urlKey);
             setDecryptedText(decrypted);
@@ -80,7 +81,7 @@ export const ViewPage: React.FC = () => {
     return () => {
       active = false;
     };
-  }, [code, location.hash]);
+  }, [code, window.location.hash]);
 
   // Handle manual decryption key submission
   const handleDecryptSubmit = async (e: React.FormEvent) => {
@@ -93,12 +94,12 @@ export const ViewPage: React.FC = () => {
     }
 
     try {
-      // Key can be full URL containing the fragment, or just the raw base64 key
       let keyToUse = keyInput.trim();
-      if (keyToUse.includes('#k=')) {
-        const urlPart = new URL(keyToUse);
-        const parsedKey = extractKeyFromFragment(urlPart.hash);
-        if (parsedKey) keyToUse = parsedKey;
+      if (keyToUse.includes('k=')) {
+        const kIndex = keyToUse.indexOf('k=');
+        if (kIndex !== -1) {
+          keyToUse = keyToUse.substring(kIndex + 2);
+        }
       }
 
       const decrypted = await decryptContent(paste.encryptedPayload, paste.iv, keyToUse);
@@ -183,10 +184,10 @@ export const ViewPage: React.FC = () => {
           </div>
 
           <div className="flex flex-col gap-2 w-full">
-            <Button variant="primary" className="w-full" onClick={() => navigate('/join')}>
+            <Button variant="primary" className="w-full" onClick={() => { window.location.hash = '#/join'; }}>
               Try Another Code
             </Button>
-            <Button variant="ghost" className="w-full" onClick={() => navigate('/')}>
+            <Button variant="ghost" className="w-full" onClick={() => { window.location.hash = '#/'; }}>
               Back to Home
             </Button>
           </div>
@@ -324,3 +325,4 @@ export const ViewPage: React.FC = () => {
     </PageWrapper>
   );
 };
+export default ViewPage;
